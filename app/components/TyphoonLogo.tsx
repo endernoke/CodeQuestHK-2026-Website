@@ -57,17 +57,6 @@ export default function TyphoonLogo({
         animate={{ pathLength: 1 }}
         transition={{ duration: 2.5, ease: "easeInOut", delay: 0.3 }}
       />
-      {/* Inner detail */}
-      <motion.circle
-        cx="50"
-        cy="50"
-        r="4"
-        fill="white"
-        opacity="0.8"
-        initial={animated ? { scale: 0 } : { scale: 1 }}
-        animate={{ scale: 1 }}
-        transition={{ duration: 0.5, delay: 2 }}
-      />
     </motion.svg>
   );
 }
