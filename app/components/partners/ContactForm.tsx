@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Send, Mail, Clipboard } from "lucide-react";
+import { Send, Mail, Clipboard, AlertCircle } from "lucide-react";
 import SectionWrapper from "@/app/components/SectionWrapper";
 import { contactInfo } from "@/app/config/links";
 
@@ -13,6 +13,11 @@ const partnershipTypes = [
   { value: "other", label: "Other / Not sure yet" },
 ];
 
+// Google Apps Script Web App URL - set in environment variable
+const GOOGLE_FORM_URL = process.env.NEXT_PUBLIC_GOOGLE_FORM_URL;
+
+type SubmitStatus = "idle" | "submitting" | "success" | "error";
+
 export default function ContactForm() {
   const [formData, setFormData] = useState({
     contactName: "",
@@ -21,18 +26,57 @@ export default function ContactForm() {
     partnershipType: "",
     message: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<SubmitStatus>("idle");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    setSubmitStatus("submitting");
+    setErrorMessage("");
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    // Check if the Google Form URL is configured
+    if (!GOOGLE_FORM_URL) {
+      console.error("NEXT_PUBLIC_GOOGLE_FORM_URL is not configured");
+      setSubmitStatus("error");
+      setErrorMessage(
+        "Form submission is not configured. Please contact us via email."
+      );
+      return;
+    }
 
-    setIsSubmitting(false);
-    setIsSubmitted(true);
+    try {
+      // With no-cors mode, we can't read the response body
+      // Google Apps Script will process the request server-side
+      // We assume success if no error is thrown
+      await fetch(GOOGLE_FORM_URL, {
+        method: "POST",
+        mode: "no-cors", // Required for Google Apps Script
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      setSubmitStatus("success");
+    } catch (error) {
+      console.error("Form submission error:", error);
+      setSubmitStatus("error");
+      setErrorMessage(
+        "Failed to submit the form. Please try again or contact us via email."
+      );
+    }
+  };
+
+  const handleReset = () => {
+    setFormData({
+      contactName: "",
+      organization: "",
+      email: "",
+      partnershipType: "",
+      message: "",
+    });
+    setSubmitStatus("idle");
+    setErrorMessage("");
   };
 
   return (
@@ -74,7 +118,7 @@ export default function ContactForm() {
           viewport={{ once: true }}
           className="lg:col-span-3"
         >
-          {isSubmitted ? (
+          {submitStatus === "success" ? (
             <div className="glass rounded-2xl p-12 text-center">
               <div className="bg-success-teal/20 mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full">
                 <Send className="text-success-teal h-8 w-8" />
@@ -82,16 +126,33 @@ export default function ContactForm() {
               <h3 className="text-storm-white mb-4 font-[family-name:var(--font-space-grotesk)] text-2xl font-bold">
                 Thank You!
               </h3>
-              <p className="text-subtle-gray">
+              <p className="text-subtle-gray mb-6">
                 We&apos;ve received your inquiry and will get back to you
                 shortly to discuss how we can work together.
               </p>
+              <button
+                onClick={handleReset}
+                className="text-electric-cyan hover:text-electric-cyan/80 text-sm underline transition-colors"
+              >
+                Submit another inquiry
+              </button>
             </div>
           ) : (
             <form
               onSubmit={handleSubmit}
               className="glass space-y-6 rounded-2xl p-8"
             >
+              {/* Error message */}
+              {submitStatus === "error" && (
+                <div className="flex items-start gap-3 rounded-lg bg-red-500/10 p-4 text-red-400">
+                  <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0" />
+                  <div>
+                    <p className="font-medium">Submission Failed</p>
+                    <p className="text-sm opacity-80">{errorMessage}</p>
+                  </div>
+                </div>
+              )}
+
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 {/* Contact Name */}
                 <div>
@@ -101,6 +162,7 @@ export default function ContactForm() {
                   <input
                     type="text"
                     required
+                    maxLength={100}
                     value={formData.contactName}
                     onChange={(e) =>
                       setFormData({ ...formData, contactName: e.target.value })
@@ -117,6 +179,7 @@ export default function ContactForm() {
                   </label>
                   <input
                     type="text"
+                    maxLength={200}
                     value={formData.organization}
                     onChange={(e) =>
                       setFormData({ ...formData, organization: e.target.value })
@@ -135,6 +198,7 @@ export default function ContactForm() {
                 <input
                   type="email"
                   required
+                  maxLength={254}
                   value={formData.email}
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
@@ -178,6 +242,7 @@ export default function ContactForm() {
                 </label>
                 <textarea
                   rows={4}
+                  maxLength={5000}
                   value={formData.message}
                   onChange={(e) =>
                     setFormData({ ...formData, message: e.target.value })
@@ -190,10 +255,10 @@ export default function ContactForm() {
               {/* Submit */}
               <button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={submitStatus === "submitting"}
                 className="bg-electric-cyan text-deep-space hover:bg-electric-cyan/90 flex w-full items-center justify-center gap-2 rounded-lg py-4 font-bold transition-all disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {isSubmitting ? (
+                {submitStatus === "submitting" ? (
                   <>
                     <div className="border-deep-space/30 border-t-deep-space h-5 w-5 animate-spin rounded-full border-2" />
                     Sending...
