@@ -1,43 +1,42 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import ParticleBackground from "@/app/components/ParticleBackground";
 import { linksConfig } from "@/app/config/links";
 
 export default function FinalCTA() {
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
+  // const [timeLeft, setTimeLeft] = useState({
+  //   days: 0,
+  //   hours: 0,
+  //   minutes: 0,
+  //   seconds: 0,
+  // });
 
-  useEffect(() => {
-    // Registration deadline: Feb 28, 2026
-    const deadline = new Date("2026-02-28T23:59:59").getTime();
+  // useEffect(() => {
+  //   // Registration deadline: Feb 28, 2026
+  //   const deadline = new Date("2026-02-28T23:59:59").getTime();
 
-    const updateTimer = () => {
-      const now = new Date().getTime();
-      const difference = deadline - now;
+  //   const updateTimer = () => {
+  //     const now = new Date().getTime();
+  //     const difference = deadline - now;
 
-      if (difference > 0) {
-        setTimeLeft({
-          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-          hours: Math.floor(
-            (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-          ),
-          minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
-          seconds: Math.floor((difference % (1000 * 60)) / 1000),
-        });
-      }
-    };
+  //     if (difference > 0) {
+  //       setTimeLeft({
+  //         days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+  //         hours: Math.floor(
+  //           (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+  //         ),
+  //         minutes: Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)),
+  //         seconds: Math.floor((difference % (1000 * 60)) / 1000),
+  //       });
+  //     }
+  //   };
 
-    updateTimer();
-    const interval = setInterval(updateTimer, 1000);
-    return () => clearInterval(interval);
-  }, []);
+  //   updateTimer();
+  //   const interval = setInterval(updateTimer, 1000);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   return (
     <section className="relative overflow-hidden py-24">
@@ -69,18 +68,17 @@ export default function FinalCTA() {
           viewport={{ once: true }}
           className="text-storm-white mb-8 font-[family-name:var(--font-space-grotesk)] text-4xl font-bold md:text-5xl lg:text-6xl"
         >
-          Ready to Build the Future?
+          Registration Opening Soon!
         </motion.h2>
 
         {/* Countdown timer */}
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.2 }}
           className="mb-10"
         >
-          <p className="text-subtle-gray mb-4">Registration closes in:</p>
           <div className="flex justify-center gap-4 md:gap-6">
             {[
               { value: timeLeft.days, label: "Days" },
@@ -101,7 +99,7 @@ export default function FinalCTA() {
               </div>
             ))}
           </div>
-        </motion.div>
+        </motion.div> */}
 
         {/* CTA buttons */}
         <motion.div
@@ -109,7 +107,7 @@ export default function FinalCTA() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ delay: 0.4 }}
-          className="flex flex-col items-center justify-center gap-4 sm:flex-row"
+          className="mt-20 flex flex-col items-center justify-center gap-4"
         >
           <Link
             href={linksConfig.registration.participant.link}
