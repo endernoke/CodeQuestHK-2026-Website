@@ -100,9 +100,7 @@ export default function TimelineSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: index * 0.1 }}
-              className={`relative flex items-start gap-4 md:items-center md:gap-0 ${
-                index % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-              }`}
+              className="relative flex items-start gap-4 md:flex-row md:items-center md:gap-0"
             >
               {/* Node */}
               <motion.div
