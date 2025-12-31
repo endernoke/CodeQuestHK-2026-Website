@@ -5,10 +5,11 @@ import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import SectionWrapper from "@/app/components/SectionWrapper";
+import StatsStrip from "./StatsStrip";
 
 export default function EventOverview() {
   return (
-    <SectionWrapper id="overview">
+    <SectionWrapper dark id="overview">
       {/* Headline Section */}
       <div className="mb-16 text-center">
         <motion.h2
@@ -149,6 +150,8 @@ export default function EventOverview() {
           </motion.div>
         </div>
       </div>
+
+      <StatsStrip />
     </SectionWrapper>
   );
 }

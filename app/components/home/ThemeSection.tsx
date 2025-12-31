@@ -15,7 +15,7 @@ const features = [
 
 export default function ThemeSection() {
   return (
-    <SectionWrapper dark>
+    <SectionWrapper>
       <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-5">
         {/* Left content - 3 columns */}
         <div className="lg:col-span-3">
