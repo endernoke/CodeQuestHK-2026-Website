@@ -6,9 +6,9 @@ import SkillsSection from "./components/home/SkillsSection";
 import ExpectationsSection from "./components/home/ExpectationsSection";
 import ThemeSection from "./components/home/ThemeSection";
 import EventDetailsSection from "./components/home/EventDetailsSection";
-import TimelineSection from "./components/home/TimelineSection";
+// import TimelineSection from "./components/home/TimelineSection";
 import ComparisonSection from "./components/home/ComparisonSection";
-import PrizesSection from "./components/home/PrizesSection";
+// import PrizesSection from "./components/home/PrizesSection";
 import FAQSection from "./components/home/FAQSection";
 import SponsorsPreview from "./components/home/SponsorsPreview";
 import FinalCTA from "./components/home/FinalCTA";
@@ -24,9 +24,9 @@ export default function Home() {
         <EventDetailsSection />
         <SkillsSection />
         <ExpectationsSection />
-        <TimelineSection />
+        {/* <TimelineSection /> */}
         <ComparisonSection />
-        <PrizesSection />
+        {/* <PrizesSection /> */}
         <SponsorsPreview />
         <FAQSection />
         <FinalCTA />
