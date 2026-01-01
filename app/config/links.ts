@@ -15,8 +15,8 @@ export const linksConfig = {
       label: "Get Ready",
       link: "https:/instagram.com/typhoonhackshk",
     },
-    mentor: "/partners",
-    volunteer: "/partners",
+    mentor: "/contact",
+    volunteer: "/contact",
   },
 
   social: {
@@ -29,7 +29,8 @@ export const linksConfig = {
   contact: {
     // Maybe we'll have own domain emails later?
     general: "mailto:codequesthk@gmail.com",
-    partners: "mailto:partners@codequesthk@gmail.com",
+    partners: "/contact",
+    page: "/contact",
     // phone: "tel:+85212345678",
   },
 } as const;

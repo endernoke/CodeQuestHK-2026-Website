@@ -13,6 +13,7 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/2025", label: "2025" },
   { href: "/partners", label: "Partners" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export default function Navigation() {

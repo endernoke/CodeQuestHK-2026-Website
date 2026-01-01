@@ -1,5 +1,5 @@
 /**
- * TyphoonHacks Partner Contact Form Handler
+ * TyphoonHacks Contact Form Handler
  * Google Apps Script for receiving form submissions and logging to Google Sheets
  *
  * SETUP INSTRUCTIONS: See scripts/google-apps-script/README.md
@@ -13,12 +13,15 @@
 const INQUIRY_NOTIFICATION_EMAIL = "";
 
 /**
- * Valid partnership types - must match the values in ContactForm.tsx
+ * Valid inquiry types - must match the values in ContactForm.tsx
  */
-const VALID_PARTNERSHIP_TYPES = [
+const VALID_INQUIRY_TYPES = [
+  "general",
+  "participant",
   "event-sponsor",
   "industry-partner",
-  "both",
+  "school-partnership",
+  "mentor-volunteer",
   "other",
 ];
 
@@ -29,7 +32,7 @@ const MAX_LENGTHS = {
   contactName: 100,
   organization: 200,
   email: 254,
-  partnershipType: 50,
+  inquiryType: 50,
   message: 5000,
 };
 
@@ -131,8 +134,16 @@ function validateFormData(data) {
     return { valid: false, error: "Email is required" };
   }
 
-  if (!data.partnershipType || typeof data.partnershipType !== "string") {
-    return { valid: false, error: "Partnership type is required" };
+  if (!data.inquiryType || typeof data.inquiryType !== "string") {
+    return { valid: false, error: "Inquiry type is required" };
+  }
+
+  if (
+    !data.message ||
+    typeof data.message !== "string" ||
+    !data.message.trim()
+  ) {
+    return { valid: false, error: "Message is required" };
   }
 
   // Validate email format
@@ -140,9 +151,9 @@ function validateFormData(data) {
     return { valid: false, error: "Invalid email format" };
   }
 
-  // Validate partnership type
-  if (!VALID_PARTNERSHIP_TYPES.includes(data.partnershipType)) {
-    return { valid: false, error: "Invalid partnership type" };
+  // Validate inquiry type
+  if (!VALID_INQUIRY_TYPES.includes(data.inquiryType)) {
+    return { valid: false, error: "Invalid inquiry type" };
   }
 
   // Validate field lengths
@@ -194,7 +205,7 @@ function sanitizeFormData(data) {
     contactName: sanitizeString(data.contactName),
     organization: sanitizeString(data.organization || ""),
     email: sanitizeString(data.email).toLowerCase(),
-    partnershipType: sanitizeString(data.partnershipType),
+    inquiryType: sanitizeString(data.inquiryType),
     message: sanitizeString(data.message || ""),
   };
 }
@@ -240,7 +251,7 @@ function logToSpreadsheet(data) {
         "Name",
         "Organization",
         "Email",
-        "Partnership Type",
+        "Inquiry Type",
         "Message",
         "Status",
       ]);
@@ -252,12 +263,15 @@ function logToSpreadsheet(data) {
       headerRange.setFontColor("#00d4ff");
     }
 
-    // Format partnership type for readability
-    const partnershipTypeLabels = {
+    // Format inquiry type for readability
+    const inquiryTypeLabels = {
+      general: "General Inquiry",
+      participant: "Participant Question",
       "event-sponsor": "Event Sponsor",
       "industry-partner": "Industry Partner",
-      both: "Both / Exploring",
-      other: "Other / Not Sure",
+      "school-partnership": "School/Student Partnership",
+      "mentor-volunteer": "Mentor/Volunteer",
+      other: "Other",
     };
 
     // Append the new row
@@ -267,7 +281,7 @@ function logToSpreadsheet(data) {
       data.contactName,
       data.organization,
       data.email,
-      partnershipTypeLabels[data.partnershipType] || data.partnershipType,
+      inquiryTypeLabels[data.inquiryType] || data.inquiryType,
       data.message,
       "New", // Status column for tracking follow-ups
     ];
@@ -300,14 +314,24 @@ function logToSpreadsheet(data) {
  * @param {Object} data - The sanitized form data
  */
 function sendNotificationEmail(data) {
-  const recipient = INQUIRY_NOTIFICATION_EMAIL;
-  if (!recipient) return; // No email configured
+  const inquiryTypeLabels = {
+    general: "General Inquiry",
+    participant: "Participant Question",
+    "event-sponsor": "Event Sponsor",
+    "industry-partner": "Industry Partner",
+    "school-partnership": "School/Student Partnership",
+    "mentor-volunteer": "Mentor/Volunteer",
+    other: "Other",
+  };
 
-  const subject = `[TyphoonHacks] New Partner Inquiry: ${data.contactName}`;
+  const subject = `[TyphoonHacks] New Inquiry: ${data.contactName}`;
   const body = `
-New partner inquiry received!
+New inquiry received!
 
 Name: ${data.contactName}
+Organization: ${data.organization || "Not provided"}
+Email: ${data.email}
+Inquiry Type: ${inquiryTypeLabels[data.inquiryType] || data.inquiryType}
 Organization: ${data.organization || "Not provided"}
 Email: ${data.email}
 Partnership Type: ${data.partnershipType}
@@ -347,7 +371,7 @@ function createJsonResponse(data, statusCode = 200) {
 // ============================================================================
 
 /**
- * Test function to verify the script is working
+ * Test inquiryType: "generals working
  * Run this from the Apps Script editor to test
  */
 function testSubmission() {

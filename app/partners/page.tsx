@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 import PartnersHero from "../components/partners/PartnersHero";
 import PartnershipTypes from "../components/partners/PartnershipTypes";
 import WhyPartner from "../components/partners/WhyPartner";
-import ContactForm from "../components/partners/ContactForm";
+import PartnerCTA from "../components/partners/PartnerCTA";
 import PartnerFAQ from "../components/partners/PartnerFAQ";
 
 export const metadata: Metadata = {
@@ -21,7 +21,7 @@ export default function PartnersPage() {
         <PartnersHero />
         <PartnershipTypes />
         <WhyPartner />
-        <ContactForm />
+        <PartnerCTA />
         <PartnerFAQ />
       </main>
       <Footer />

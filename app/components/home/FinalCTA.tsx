@@ -127,8 +127,8 @@ export default function FinalCTA() {
             />
           </Link>
           <Link
-            href={linksConfig.contact.general}
-            className="text-subtle-gray hover:text-electric-cyan transition-colors"
+            href="/contact"
+            className="hover:text-electric-cyan text-white transition-colors"
           >
             Have questions? Contact us
           </Link>

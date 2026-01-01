@@ -11,7 +11,6 @@ import {
   Briefcase,
   Code,
   Presentation,
-  ArrowRight,
 } from "lucide-react";
 import SectionWrapper from "@/app/components/SectionWrapper";
 
@@ -194,23 +193,6 @@ export default function PartnershipTypes() {
           </div>
         </motion.div>
       </div>
-
-      {/* CTA */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ delay: 0.4 }}
-        className="mt-12 text-center"
-      >
-        <a
-          href="#contact"
-          className="bg-electric-cyan text-deep-space hover:bg-electric-cyan/90 group inline-flex items-center gap-2 rounded-lg px-8 py-4 font-semibold transition-all"
-        >
-          Start a Conversation
-          <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-        </a>
-      </motion.div>
     </SectionWrapper>
   );
 }
